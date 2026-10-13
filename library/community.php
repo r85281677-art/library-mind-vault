@@ -1,0 +1,8 @@
+<?php require "db.php"; require "auth.php"; requireLogin();
+if($_SERVER['REQUEST_METHOD']=='POST' && !empty($_POST['content'])){ $stmt=$pdo->prepare("INSERT INTO community_posts (user_id, content) VALUES (?,?)"); $stmt->execute([currentUserId(), $_POST['content']]); header("Location: community.php"); exit();}
+$posts=$pdo->query("SELECT cp.*, u.username FROM community_posts cp JOIN users u ON u.id=cp.user_id ORDER BY cp.created_at DESC LIMIT 50")->fetchAll();
+?>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Community</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="sidebar"><div class="logo">📚 <span>Mind</span>Vault</div><div class="nav"><a href="index.php">🏠 Home</a><a href="explore.php">🔍 Explore</a><a href="library.php">📖 My Library</a><a class="active" href="community.php">💬 Community</a><a href="profile.php">👤 Profile</a><a href="logout.php" style="margin-top:auto;color:#ff8a8a">🚪 Logout</a></div></div>
+<div class="main"><h2>Community</h2><form method="POST" class="card" style="margin:16px 0;display:flex;gap:10px"><input name="content" class="input" placeholder="Share what you are reading..." required><button class="btn">Post</button></form>
+<div style="display:flex;flex-direction:column;gap:12px"><?php foreach($posts as $p): ?><div class="card"><b><?=htmlspecialchars($p['username'])?></b> <span class="badge"><?=htmlspecialchars($p['created_at'])?></span><p style="margin-top:8px"><?=htmlspecialchars($p['content'])?></p></div><?php endforeach;?></div></div></body></html>

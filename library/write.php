@@ -1,0 +1,10 @@
+<?php require "db.php"; require "auth.php"; requireLogin();
+$msg=""; if($_SERVER['REQUEST_METHOD']=='POST'){
+  $stmt=$pdo->prepare("INSERT INTO books (user_id, title, author, category, cover_url, description, content) VALUES (?,?,?,?,?,?,?)");
+  $stmt->execute([currentUserId(), $_POST['title'], $_POST['author'], $_POST['category'], $_POST['cover'], $_POST['desc'], $_POST['content']]);
+  $msg="Book published! Find it in Profile > Books You Wrote";
+}
+?>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Write</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="sidebar"><div class="logo">📚 <span>Mind</span>Vault</div><div class="nav"><a href="index.php">🏠 Home</a><a href="explore.php">🔍 Explore</a><a href="library.php">📖 My Library</a><a href="community.php">💬 Community</a><a href="profile.php">👤 Profile</a><a class="active" href="write.php">✍️ Write</a><a href="logout.php" style="margin-top:auto;color:#ff8a8a">🚪 Logout</a></div></div>
+<div class="main"><h2>Write a Book</h2><?php if($msg) echo "<div class='alert alert-success'>$msg</div>";?><form method="POST" class="card" style="max-width:700px;display:flex;flex-direction:column;gap:10px;margin-top:12px"><input name="title" class="input" placeholder="Title" required><input name="author" class="input" placeholder="Author (your pen name)" required value="<?=htmlspecialchars($_SESSION['username'])?>"><input name="category" class="input" placeholder="Category e.g. Fiction, Self-Help"><input name="cover" class="input" placeholder="Cover image URL (or leave empty)"><textarea name="desc" class="input" rows="3" placeholder="Short description"></textarea><label style="color:var(--muted);font-size:13px">Full Book Content - separate pages with empty line</label><textarea name="content" class="input" rows="12" placeholder="Chapter 1... \n\n Chapter 2..." required></textarea><button class="btn">Publish Book</button></form></div></body></html>

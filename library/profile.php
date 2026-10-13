@@ -1,0 +1,6 @@
+<?php require "db.php"; require "auth.php"; requireLogin();
+$stmt=$pdo->prepare("SELECT * FROM users WHERE id=?"); $stmt->execute([currentUserId()]); $u=$stmt->fetch();
+?>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profile</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="sidebar"><div class="logo">📚 <span>Mind</span>Vault</div><div class="nav"><a href="index.php">🏠 Home</a><a href="explore.php">🔍 Explore</a><a href="library.php">📖 My Library</a><a href="community.php">💬 Community</a><a class="active" href="profile.php">👤 Profile</a><a href="logout.php" style="margin-top:auto;color:#ff8a8a">🚪 Logout</a></div></div>
+<div class="main"><h2>Profile</h2><div class="card" style="max-width:500px;margin-top:16px"><p><b>Username:</b> <?=htmlspecialchars($u['username'])?></p><p><b>Email:</b> <?=htmlspecialchars($u['email'])?></p><p><b>Joined:</b> <?=htmlspecialchars($u['created_at'])?></p></div></div></body></html>

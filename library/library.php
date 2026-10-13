@@ -1,0 +1,6 @@
+<?php require "db.php"; require "auth.php"; requireLogin();
+$stmt=$pdo->prepare("SELECT b.* FROM books b JOIN library l ON l.book_id=b.id WHERE l.user_id=?"); $stmt->execute([currentUserId()]); $books=$stmt->fetchAll();
+?>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Library</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="sidebar"><div class="logo">📚 <span>Mind</span>Vault</div><div class="nav"><a href="index.php">🏠 Home</a><a href="explore.php">🔍 Explore</a><a class="active" href="library.php">📖 My Library</a><a href="community.php">💬 Community</a><a href="profile.php">👤 Profile</a><a href="logout.php" style="margin-top:auto;color:#ff8a8a">🚪 Logout</a></div></div>
+<div class="main"><h2>My Library</h2><p style="color:var(--muted)">Books you saved</p><div class="grid" style="margin-top:16px"><?php if(!$books) echo "<p style='color:var(--muted)'>No books yet. Go to Explore and click + Library</p>"; foreach($books as $b): ?><div class="book"><img src="<?=htmlspecialchars($b['cover_url'])?>"><div class="info"><h4><?=htmlspecialchars($b['title'])?></h4><a class="btn" style="padding:6px 10px;font-size:12px" href="read.php?id=<?=$b['id']?>">Continue Reading</a></div></div><?php endforeach;?></div></div></body></html>
